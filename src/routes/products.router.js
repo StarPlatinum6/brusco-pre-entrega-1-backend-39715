@@ -9,8 +9,9 @@ const router = Router();
 /////////////////////////
 
 router.get("/", async (req, res) => {
-  const products = await productManager.getProducts();
   const limit = req.query.limit;
+  const products = await productManager.getProducts();
+  const limitedProducts = products.slice(0, limit);
 
   if (!products)
     return res.status(404).send({
@@ -31,8 +32,6 @@ router.get("/", async (req, res) => {
     });
   }
 
-  const limitedProducts = await products.slice(0, limit);
-
   return res.status(200).send({
     status: "success",
     message: { products: limitedProducts },
@@ -41,14 +40,7 @@ router.get("/", async (req, res) => {
 
 router.get("/:pid", async (req, res) => {
   let pid = req.params.pid;
-  const products = await productManager.getProducts();
-  const filteredProduct = await products.filter((prod) => prod.id === parseInt(pid));
-
-  if (!products)
-    return res.status(404).send({
-      status: "error",
-      message: { error: `No products found` },
-    });
+  const filteredProduct = await productManager.getProductById(pid);
 
   if (isNaN(pid) || pid <= 0) {
     return res.status(400).send({
@@ -57,12 +49,11 @@ router.get("/:pid", async (req, res) => {
     });
   }
 
-  if (filteredProduct == 0) {
+  if (!filteredProduct || filteredProduct == 0)
     return res.status(404).send({
       status: "error",
       message: { error: `Product with ID ${pid} was not found` },
     });
-  }
 
   return res.status(200).send({
     status: "success",
@@ -109,8 +100,6 @@ router.post("/", async (req, res) => {
 /////////////////////////
 ///////PUT METHOD////////
 /////////////////////////
-
-// status Tendrá un valor true por defecto. Será false cuando hayan 0 unidades del producto en stock
 
 router.put("/:pid", async (req, res) => {
   const updateProd = req.body;

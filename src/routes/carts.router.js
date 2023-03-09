@@ -1,7 +1,9 @@
 import { Router } from "express";
 import CartManager from "../cartManager.js";
+import ProductManager from "../productManager.js";
 
 const cartManager = new CartManager();
+const productManager = new ProductManager();
 const router = Router();
 
 /////////////////////////
@@ -71,6 +73,9 @@ router.post("/:cid/product/:pid", async (req, res) => {
   const carts = await cartManager.getCarts();
   const cartIdFound = carts.findIndex((cart) => cart.id === parseInt(cartId));
 
+  const products = await productManager.getProducts();
+  const productIdFound = products.findIndex((prod) => prod.id === parseInt(productId));
+
   if (cartIdFound === -1) {
     return res.status(400).send({
       status: "error",
@@ -78,24 +83,31 @@ router.post("/:cid/product/:pid", async (req, res) => {
     });
   }
 
-  if (!cartId) {
+  if (productIdFound === -1) {
     return res.status(400).send({
       status: "error",
-      message: { error: "Must specify the cart ID to add a product to." },
+      message: { error: `Product with ID ${productId} was not found` },
     });
   }
 
-  if (!quantity) {
+  if (isNaN(cartId) || cartId <= 0) {
     return res.status(400).send({
       status: "error",
-      message: { error: "Must specify quantity to add a product to the cart." },
+      message: { error: `Cart ID ${cartId} is not a valid value` },
     });
   }
 
-  if (!productId) {
+  if (isNaN(quantity) || quantity <= 0) {
     return res.status(400).send({
       status: "error",
-      message: { error: "Must specify the product ID to add to the cart." },
+      message: { error: `Quantity ${quantity} is not a valid value` },
+    });
+  }
+
+  if (isNaN(productId) || productId <= 0) {
+    return res.status(400).send({
+      status: "error",
+      message: { error: `Product ID ${productId} is not a valid value` },
     });
   }
 
