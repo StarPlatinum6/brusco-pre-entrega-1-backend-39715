@@ -25,14 +25,7 @@ router.get("/", async (req, res) => {
 
 router.get("/:cid", async (req, res) => {
   let cid = req.params.cid;
-  const carts = await cartManager.getCarts();
-  const filteredCart = await carts.filter((cart) => cart.id === parseInt(cid));
-
-  if (!carts)
-    return res.status(404).send({
-      status: "error",
-      message: { error: `No carts found` },
-    });
+  const filteredCart = await cartManager.getCartById(cid);
 
   if (isNaN(cid) || cid <= 0) {
     return res.status(400).send({
@@ -70,92 +63,50 @@ router.post("/", async (req, res) => {
   });
 });
 
-export default router;
+router.post("/:cid/product/:pid", async (req, res) => {
+  const cartId = req.params.cid;
+  const productId = req.params.pid;
+  const quantity = req.body.quantity;
 
-/////////////////////////
-///////PUT METHOD////////
-/////////////////////////
+  const carts = await cartManager.getCarts();
+  const cartIdFound = carts.findIndex((cart) => cart.id === parseInt(cartId));
 
-// status Tendrá un valor true por defecto. Será false cuando hayan 0 unidades del producto en stock
-
-router.put("/:pid", async (req, res) => {
-  const updateProd = req.body;
-  const updatePos = req.params.pid;
-
-  if (!updateProd) {
+  if (cartIdFound === -1) {
     return res.status(400).send({
       status: "error",
-      message: { error: "Incomplete values" },
+      message: { error: `Cart with ID ${cartId} was not found` },
     });
   }
 
-  const products = await productManager.getProducts()
-  
-  if (isNaN(updatePos) || updatePos <= 0) {
+  if (!cartId) {
     return res.status(400).send({
       status: "error",
-      message: { error: `${updatePos} is not a valid position` },
+      message: { error: "Must specify the cart ID to add a product to." },
     });
   }
-  
-  if (updateProd.id) {
+
+  if (!quantity) {
     return res.status(400).send({
       status: "error",
-      message: { error: "Product ID cannot be changed" },
+      message: { error: "Must specify quantity to add a product to the cart." },
     });
   }
 
-  if (updatePos > products.length) {
-    return res.status(404).send({
-      status: "error",
-      message: { error: `No product found on position ${updatePos}` },
-    });
-  }
-  
-  await productManager.updateProduct(updatePos, updateProd);
-
-  return res.status(200).send({
-    status: "success",
-    message: { update: `Product ${updateProd.title} was successfully updated` },
-  });
-});
-
-/////////////////////////
-//////DELETE METHOD//////
-/////////////////////////
-
-router.delete("/:pid", async (req, res) => {
-  const deletePos = req.params.pid;
-
-  if (!deletePos) {
+  if (!productId) {
     return res.status(400).send({
       status: "error",
-      message: { error: "Incomplete values" },
+      message: { error: "Must specify the product ID to add to the cart." },
     });
   }
 
-  if (isNaN(deletePos) || deletePos <= 0) {
-    return res.status(400).send({
-      status: "error",
-      message: { error: `${deletePos} is not a valid position` },
-    });
-  }
+  await cartManager.addToCart(cartId,productId,quantity)
 
-  const products = await productManager.getProducts()
-
-  if (products.length < deletePos) {
-    return res.status(404).send({
-      status: "error",
-      message: { error: `No product found on position ${deletePos}` },
-    });
-  }
-
-  await productManager.deleteProduct(deletePos);
-
-  return res.status(200).send({
+  return res.status(201).send({
     status: "success",
     message: {
-      delete: `The product in position ${deletePos} was successfully deleted`,
+      success: `Successfully added ${quantity} of product with ID ${productId} to cart with ID ${cartId}`,
     },
   });
 });
+
+export default router;

@@ -35,15 +35,10 @@ export default class CartManager {
   getCartById = async (cartId) => {
     try {
       const carts = await this.getCarts();
-      const cartIdFound = carts.findIndex((cart) => cart.id === cartId);
-      if (cartIdFound !== -1) {
-        console.log(`Info on cart with Cart ID ${cartId}:`);
-        console.log(carts[cartIdFound]);
-      } else {
-        throw new Error(`Get: Cart with ID ${cartId} was not found`);
-      }
+      const filteredCart = await carts.filter((cart) => cart.id === parseInt(cartId));
+      return filteredCart;
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   };
 
@@ -64,41 +59,33 @@ export default class CartManager {
       await fs.promises.writeFile(this.path, JSON.stringify(carts, null, "\t"));
     } catch (error) {
       console.log(error);
-    } 
+    }
   };
 
   addToCart = async (cartId, productId, quantity) => {
     try {
-
-      if (!cartId) {
-        throw new Error("You must specify the cart ID to add a product to.");
-      }
-
-      if (!quantity) {
-        throw new Error("You must specify quantity to add a product to the cart.");
-      }
-
-      if (!productId) {
-        throw new Error("You must specify the product ID to add to the cart.");
-      }
+      const productToAdd = {
+        id: parseInt(productId),
+        quantity: quantity,
+      };
 
       const carts = await this.getCarts();
+
       const cartIdFound = carts.findIndex((cart) => cart.id === parseInt(cartId));
+      const productIdFound = carts[cartIdFound].products.findIndex((prod) => prod.id === parseInt(productId)) // Searches for a product ID inside a Cart ID.
 
       if (cartIdFound !== -1) {
-        // por a acá meter un push
-
-
-        const updatedProduct = { ...products[productIdFound], ...updates}
-        products[productIdFound] = updatedProduct;
-        await fs.promises.writeFile(this.path,JSON.stringify(products, null, "\t"));
-        console.log(`Product with ID ${productId} was updated successfully`);
+        if ( productIdFound !== -1 ) {
+          carts[cartIdFound].products[productIdFound].quantity++;
+        } else {
+          carts[cartIdFound].products.push(productToAdd);
+        }
+        await fs.promises.writeFile(this.path,JSON.stringify(carts, null, "\t"));
       } else {
         throw new Error(`Add: Cart with ID ${cartId} was not found`);
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   };
-
 }

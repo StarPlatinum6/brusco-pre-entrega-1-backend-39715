@@ -105,7 +105,6 @@ router.post("/", async (req, res) => {
   });
 });
 
-export default router;
 
 /////////////////////////
 ///////PUT METHOD////////
@@ -116,14 +115,14 @@ export default router;
 router.put("/:pid", async (req, res) => {
   const updateProd = req.body;
   const updatePos = req.params.pid;
-
+  
   if (!updateProd) {
     return res.status(400).send({
       status: "error",
       message: { error: "Incomplete values" },
     });
   }
-
+  
   const products = await productManager.getProducts()
   
   if (isNaN(updatePos) || updatePos <= 0) {
@@ -148,7 +147,7 @@ router.put("/:pid", async (req, res) => {
   }
   
   await productManager.updateProduct(updatePos, updateProd);
-
+  
   return res.status(200).send({
     status: "success",
     message: { update: `Product ${updateProd.title} was successfully updated` },
@@ -161,32 +160,32 @@ router.put("/:pid", async (req, res) => {
 
 router.delete("/:pid", async (req, res) => {
   const deletePos = req.params.pid;
-
+  
   if (!deletePos) {
     return res.status(400).send({
       status: "error",
       message: { error: "Incomplete values" },
     });
   }
-
+  
   if (isNaN(deletePos) || deletePos <= 0) {
     return res.status(400).send({
       status: "error",
       message: { error: `${deletePos} is not a valid position` },
     });
   }
-
+  
   const products = await productManager.getProducts()
-
+  
   if (products.length < deletePos) {
     return res.status(404).send({
       status: "error",
       message: { error: `No product found on position ${deletePos}` },
     });
   }
-
+  
   await productManager.deleteProduct(deletePos);
-
+  
   return res.status(200).send({
     status: "success",
     message: {
@@ -194,3 +193,5 @@ router.delete("/:pid", async (req, res) => {
     },
   });
 });
+
+export default router;
