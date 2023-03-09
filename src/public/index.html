@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Prueba Express Router</title>
+  </head>
+  <body>
+    <h1>Express Router - Static files</h1>
+    <h3>Upload a new Pet!</h3>
+    <form action="/api/pets" method="post" enctype="multipart/form-data">
+      <label for="name">Name</label>
+      <input type="text" name="name" id="name" required />
+
+      <label for="breed">Breed</label>
+      <input type="text" name="breed" id="breed" required />
+
+      <label for="age">Age</label>
+      <input type="number" name="age" id="age" required />
+
+      <label for="file">File</label>
+      <input type="file" id="file" name="file" accept="file/*" required />
+
+      <button type="submit">Submit!</button>
+      <button type="reset">Reset</button>
+    </form>
+    <img src="./node.png" alt="" style="width: 500px" />
+    <img src="./images/michi.jpg" alt="" style="width: 100px" />
+  </body>
+</html>
