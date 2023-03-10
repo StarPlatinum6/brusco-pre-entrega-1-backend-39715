@@ -10,21 +10,6 @@ const router = Router();
 ///////GET METHODS///////
 /////////////////////////
 
-router.get("/", async (req, res) => {
-  const carts = await cartManager.getCarts();
-
-  if (!carts)
-    return res.status(404).send({
-      status: "error",
-      message: { error: `No carts found` },
-    });
-
-  return res.status(200).send({
-    status: "success",
-    message: { carts: carts },
-  });
-});
-
 router.get("/:cid", async (req, res) => {
   let cid = req.params.cid;
   const filteredCart = await cartManager.getCartById(cid);
@@ -45,7 +30,7 @@ router.get("/:cid", async (req, res) => {
 
   return res.status(200).send({
     status: "success",
-    message: { product: filteredCart },
+    message: { cart: filteredCart },
   });
 });
 
@@ -68,7 +53,7 @@ router.post("/", async (req, res) => {
 router.post("/:cid/product/:pid", async (req, res) => {
   const cartId = req.params.cid;
   const productId = req.params.pid;
-  const quantity = req.body.quantity;
+  // const quantity = req.body.quantity;
 
   const carts = await cartManager.getCarts();
   const cartIdFound = carts.findIndex((cart) => cart.id === parseInt(cartId));
@@ -97,12 +82,12 @@ router.post("/:cid/product/:pid", async (req, res) => {
     });
   }
 
-  if (isNaN(quantity) || quantity <= 0) {
-    return res.status(400).send({
-      status: "error",
-      message: { error: `Quantity ${quantity} is not a valid value` },
-    });
-  }
+  // if (isNaN(quantity) || quantity <= 0) {
+  //   return res.status(400).send({
+  //     status: "error",
+  //     message: { error: `Quantity ${quantity} is not a valid value` },
+  //   });
+  // }
 
   if (isNaN(productId) || productId <= 0) {
     return res.status(400).send({
@@ -111,12 +96,13 @@ router.post("/:cid/product/:pid", async (req, res) => {
     });
   }
 
-  await cartManager.addToCart(cartId,productId,quantity)
+  // await cartManager.addToCart(cartId,productId,quantity)
+  await cartManager.addToCart(cartId,productId)
 
   return res.status(201).send({
     status: "success",
     message: {
-      success: `Successfully added ${quantity} of product with ID ${productId} to cart with ID ${cartId}`,
+      success: `Successfully added product with ID ${productId} to cart with ID ${cartId}`,
     },
   });
 });

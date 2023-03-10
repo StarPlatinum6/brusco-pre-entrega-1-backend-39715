@@ -18,4 +18,5 @@ const env = async () => {
 
 env();
 
-// status Tendrá un valor true por defecto. Será false cuando hayan 0 unidades del producto en stock
+// Chequear que update product rebote si el ID ya existe (product route).
+// Hacer que status pase a false si el stock es 0.

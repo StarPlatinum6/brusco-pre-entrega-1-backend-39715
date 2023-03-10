@@ -40,5 +40,19 @@
 			"http://localhost:8080/images/image1.jpg",
 			"http://localhost:8080/images/image2.jpg"
 		]
+	},
+	{
+		"id": 4,
+		"title": "Nvidia RTX 4090",
+		"description": "Enthusiast Nvidia Gaming GPU",
+		"code": "RTX4090",
+		"price": 1400,
+		"status": true,
+		"stock": 4,
+		"category": "GPU",
+		"thumbnails": [
+			"http://localhost:8080/images/image1.jpg",
+			"http://localhost:8080/images/image2.jpg"
+		]
 	}
 ]

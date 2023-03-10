@@ -62,11 +62,11 @@ export default class CartManager {
     }
   };
 
-  addToCart = async (cartId, productId, quantity) => {
+  addToCart = async (cartId, productId) => {
     try {
       const productToAdd = {
         id: parseInt(productId),
-        quantity: quantity,
+        quantity: 1,
       };
 
       const carts = await this.getCarts();
