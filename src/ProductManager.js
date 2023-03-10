@@ -48,8 +48,10 @@ export default class ProductManager {
         ? product = { status: true, ...product}
         : product = { status: false, ...product}
 
-      const imgPaths = product.thumbnails.map(prod => prod.path)
-      product.thumbnails = imgPaths
+      if (product.thumbnails[0].hasOwnProperty("fieldname")) {
+        const imgPaths = product.thumbnails.map(prod => prod.path);
+        product.thumbnails = imgPaths;
+      }
 
       const products = await this.getProducts();
       const productIndex = await products.findIndex((prod) => prod.code === product.code);

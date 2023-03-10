@@ -76,9 +76,16 @@ router.post("/", uploader.array("thumbnails"), async (req, res) => {
     });
   }
 
+  if (newProduct.id || newProduct.id == 0) {
+    return res.status(400).send({
+      status: "error",
+      message: { error: "Product ID cannot be assigned" },
+    });
+  }
+
   if (req.files) newProduct.thumbnails = req.files;
 
-  if (!req.files) {
+  if (!req.files && !newProduct.thumbnails) {
     return res.status(400).send({
       status: "error",
       message: { error: `Thumbnails could not be saved` },
@@ -110,6 +117,8 @@ router.post("/", uploader.array("thumbnails"), async (req, res) => {
 /////////////////////////
 ///////PUT METHOD////////
 /////////////////////////
+
+// Si edito en :pid un ID que fue eliminado, por alguna razón tira el 200 pero no hace nada.
 
 router.put("/:pid", async (req, res) => {
   const updateProd = req.body;
@@ -156,6 +165,8 @@ router.put("/:pid", async (req, res) => {
 /////////////////////////
 //////DELETE METHOD//////
 /////////////////////////
+
+// Despues de haber editado un :pid y querer borrar, se bugea todo
 
 router.delete("/:pid", async (req, res) => {
   const deletePos = req.params.pid;
