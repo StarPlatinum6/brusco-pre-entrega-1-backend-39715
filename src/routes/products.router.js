@@ -68,7 +68,7 @@ router.get("/:pid", async (req, res) => {
 
 router.post("/", uploader.array("thumbnails"), async (req, res) => {
   let newProduct = req.body;
-  
+
   if (!newProduct.title || !newProduct.description || !newProduct.code || !newProduct.price || !newProduct.stock || !newProduct.category) {
     return res.status(400).send({
       status: "error",
@@ -118,8 +118,6 @@ router.post("/", uploader.array("thumbnails"), async (req, res) => {
 ///////PUT METHOD////////
 /////////////////////////
 
-// Si edito en :pid un ID que fue eliminado, por alguna razón tira el 200 pero no hace nada.
-
 router.put("/:pid", async (req, res) => {
   const updateProd = req.body;
   const updatePos = req.params.pid;
@@ -166,40 +164,36 @@ router.put("/:pid", async (req, res) => {
 //////DELETE METHOD//////
 /////////////////////////
 
-// Despues de haber editado un :pid y querer borrar, se bugea todo
-
 router.delete("/:pid", async (req, res) => {
-  const deletePos = req.params.pid;
+  const deleteID = req.params.pid;
   
-  if (!deletePos) {
+  if (!deleteID) {
     return res.status(400).send({
       status: "error",
       message: { error: "Incomplete values" },
     });
   }
   
-  if (isNaN(deletePos) || deletePos <= 0) {
+  if (isNaN(deleteID) || deleteID <= 0) {
     return res.status(400).send({
       status: "error",
-      message: { error: `${deletePos} is not a valid position` },
+      message: { error: `${deleteID} is not a valid position` },
     });
   }
   
-  const products = await productManager.getProducts()
-  
-  if (products.length < deletePos) {
+  const prodDeletePos = await productManager.deleteProduct(deleteID);
+
+  if (prodDeletePos === -1) {
     return res.status(404).send({
       status: "error",
-      message: { error: `No product found on position ${deletePos}` },
+      message: { error: `No product found with ID ${deleteID}` },
     });
   }
-  
-  await productManager.deleteProduct(deletePos);
   
   return res.status(200).send({
     status: "success",
     message: {
-      delete: `The product in position ${deletePos} was successfully deleted`,
+      delete: `The product with ID ${deleteID} was successfully deleted`,
     },
   });
 });

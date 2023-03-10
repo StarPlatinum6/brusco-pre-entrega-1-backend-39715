@@ -91,6 +91,8 @@ export default class ProductManager {
       if (productIdFound !== -1) {
         products.splice(productIdFound, 1);
         await fs.promises.writeFile(this.path,JSON.stringify(products, null, "\t"));
+      } else {
+        return productIdFound
       }
     } catch (error) {
       console.log(error)
