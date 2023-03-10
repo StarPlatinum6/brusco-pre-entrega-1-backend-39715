@@ -4,11 +4,41 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Prueba Express Router</title>
+    <title>Prueba Express Router + Multer</title>
   </head>
   <body>
-    <h1>Express Router - Static files</h1>
-    <h3>Upload a new Pet!</h3>
+    <h1>Ephemer Gaming backend testing</h1>
+    <h2>Express Router - Static files - Formdata upload with multer</h2>
+    <h3>Upload a new product!</h3>
+    <form action="/api/products" method="post" enctype="multipart/form-data">
+      <label for="title">Title</label>
+      <input type="text" name="title" id="title" required />
+      <br>
+      <label for="description">Description</label>
+      <input type="text" name="description" id="description" required />
+      <br>
+      <label for="code">Code</label>
+      <input type="text" name="code" id="code" required />
+      <br>
+      <label for="price">Price</label>
+      <input type="number" name="price" id="price" required />
+      <br>
+      <label for="stock">Stock</label>
+      <input type="number" name="stock" id="stock" required />
+      <br>
+      <label for="category">Category</label>
+      <input type="text" name="category" id="category" required />
+      <br>
+      <label for="thumbnails">Product Thumbnails</label>
+      <input type="file" id="thumbnails" name="thumbnails" accept="file/*" multiple/>
+      <br>
+      <button type="submit">Submit!</button>
+      <button type="reset">Reset</button>
+    </form>
+
+    <br><hr><br><br><hr>
+
+    <h3>¡Add products to cart!</h3>
     <form action="/api/pets" method="post" enctype="multipart/form-data">
       <label for="name">Name</label>
       <input type="text" name="name" id="name" required />
@@ -19,13 +49,13 @@
       <label for="age">Age</label>
       <input type="number" name="age" id="age" required />
 
-      <label for="file">File</label>
-      <input type="file" id="file" name="file" accept="file/*" required />
+      <label for="thumbnails">Images</label>
+      <input type="thumbnails" id="thumbnails" name="thumbnails" accept="file/*" multiple/>
 
       <button type="submit">Submit!</button>
       <button type="reset">Reset</button>
     </form>
     <img src="./node.png" alt="" style="width: 500px" />
-    <img src="./images/michi.jpg" alt="" style="width: 100px" />
+    <img src="./images/1678323968181-michi.jpg" alt="" style="width: 100px" />
   </body>
 </html>

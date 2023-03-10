@@ -44,15 +44,23 @@ export default class ProductManager {
 
   addProduct = async (product) => {
     try {
+      product.stock > 0
+        ? product = { status: true, ...product}
+        : product = { status: false, ...product}
+
+      const imgPaths = product.thumbnails.map(prod => prod.path)
+      product.thumbnails = imgPaths
+
       const products = await this.getProducts();
       const productIndex = await products.findIndex((prod) => prod.code === product.code);
       
       if (productIndex === -1) {
         products.length === 0 
-          ? product.id = 1
-          : product.id = products[products.length - 1].id + 1;
+          ? product = { id: 1, ...product}
+          : product = { id: products[products.length - 1].id + 1, ...product}
         products.push(product);
         await fs.promises.writeFile(this.path,JSON.stringify(products, null, "\t"));
+        return product;
       } 
     } catch (error) {
       console.log(error)

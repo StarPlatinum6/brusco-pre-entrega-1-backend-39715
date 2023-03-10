@@ -1,5 +1,6 @@
 import { Router } from "express";
 import ProductManager from "../productManager.js";
+import { uploader } from "../utils.js";
 
 const productManager = new ProductManager();
 const router = Router();
@@ -65,13 +66,22 @@ router.get("/:pid", async (req, res) => {
 ///////POST METHOD///////
 /////////////////////////
 
-router.post("/", async (req, res) => {
-  const newProduct = req.body;
+router.post("/", uploader.array("thumbnails"), async (req, res) => {
+  let newProduct = req.body;
   
-  if (!newProduct.title || !newProduct.description || !newProduct.code || !newProduct.price || !newProduct.status || !newProduct.stock || !newProduct.category) {
+  if (!newProduct.title || !newProduct.description || !newProduct.code || !newProduct.price || !newProduct.stock || !newProduct.category) {
     return res.status(400).send({
       status: "error",
       message: { error: "All fields are mandatory" },
+    });
+  }
+
+  if (req.files) newProduct.thumbnails = req.files;
+
+  if (!req.files) {
+    return res.status(400).send({
+      status: "error",
+      message: { error: `Thumbnails could not be saved` },
     });
   }
 
@@ -85,7 +95,7 @@ router.post("/", async (req, res) => {
     });
   }
 
-  await productManager.addProduct(newProduct);
+  newProduct = await productManager.addProduct(newProduct);
 
   return res.status(201).send({
     status: "success",
