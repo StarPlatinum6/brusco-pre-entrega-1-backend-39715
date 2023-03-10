@@ -53,7 +53,6 @@ router.post("/", async (req, res) => {
 router.post("/:cid/product/:pid", async (req, res) => {
   const cartId = req.params.cid;
   const productId = req.params.pid;
-  // const quantity = req.body.quantity;
 
   const carts = await cartManager.getCarts();
   const cartIdFound = carts.findIndex((cart) => cart.id === parseInt(cartId));
@@ -82,13 +81,6 @@ router.post("/:cid/product/:pid", async (req, res) => {
     });
   }
 
-  // if (isNaN(quantity) || quantity <= 0) {
-  //   return res.status(400).send({
-  //     status: "error",
-  //     message: { error: `Quantity ${quantity} is not a valid value` },
-  //   });
-  // }
-
   if (isNaN(productId) || productId <= 0) {
     return res.status(400).send({
       status: "error",
@@ -96,7 +88,6 @@ router.post("/:cid/product/:pid", async (req, res) => {
     });
   }
 
-  // await cartManager.addToCart(cartId,productId,quantity)
   await cartManager.addToCart(cartId,productId)
 
   return res.status(201).send({

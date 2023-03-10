@@ -139,7 +139,7 @@ router.put("/:pid", async (req, res) => {
   
   return res.status(200).send({
     status: "success",
-    message: { update: `Product ${updateProd.title} was successfully updated` },
+    message: { update: `Product with ID ${updatePos} was successfully updated to ${updateProd.title}` },
   });
 });
 
