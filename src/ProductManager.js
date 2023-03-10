@@ -78,6 +78,8 @@ export default class ProductManager {
         const updatedProduct = { ...products[productIdFound], ...updates}
         products[productIdFound] = updatedProduct;
         await fs.promises.writeFile(this.path,JSON.stringify(products, null, "\t"));
+      } else {
+        return productIdFound
       }
     } catch (error) {
       console.log(error)

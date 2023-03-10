@@ -129,8 +129,6 @@ router.put("/:pid", async (req, res) => {
     });
   }
   
-  const products = await productManager.getProducts()
-  
   if (isNaN(updatePos) || updatePos <= 0) {
     return res.status(400).send({
       status: "error",
@@ -144,15 +142,15 @@ router.put("/:pid", async (req, res) => {
       message: { error: "Product ID cannot be changed" },
     });
   }
+  
+  const prodUpdatePos = await productManager.updateProduct(updatePos, updateProd);
 
-  if (updatePos > products.length) {
+  if (prodUpdatePos === -1) {
     return res.status(404).send({
       status: "error",
-      message: { error: `No product found on position ${updatePos}` },
+      message: { error: `No product found with ID ${updatePos}` },
     });
   }
-  
-  await productManager.updateProduct(updatePos, updateProd);
   
   return res.status(200).send({
     status: "success",
