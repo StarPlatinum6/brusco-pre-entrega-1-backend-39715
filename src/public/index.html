@@ -38,22 +38,9 @@
 
     <br><hr><br><br><hr>
 
-    <h3>¡Add products to cart!</h3>
-    <form action="/api/pets" method="post" enctype="multipart/form-data">
-      <label for="name">Name</label>
-      <input type="text" name="name" id="name" required />
-
-      <label for="breed">Breed</label>
-      <input type="text" name="breed" id="breed" required />
-
-      <label for="age">Age</label>
-      <input type="number" name="age" id="age" required />
-
-      <label for="thumbnails">Images</label>
-      <input type="thumbnails" id="thumbnails" name="thumbnails" accept="file/*" multiple/>
-
-      <button type="submit">Submit!</button>
-      <button type="reset">Reset</button>
+    <h3>¡Create a cart!</h3>
+    <form action="/api/carts" method="post" enctype="multipart/form-data">
+      <button type="submit">Create!</button>
     </form>
     <img src="./node.png" alt="" style="width: 500px" />
     <img src="./images/1678323968181-michi.jpg" alt="" style="width: 100px" />
